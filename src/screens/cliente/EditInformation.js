@@ -5,6 +5,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { Toast } from 'react-native-toast-message';
 import { Formik } from 'formik';
 import * as yup from 'yup';
+import AppBarCliente from '../../components/common/AppBarClient';
 
 //Llamamos una constante para validar que no se manden caracteres especiales
 const validationSchema = yup.object().shape({
@@ -90,6 +91,7 @@ export default function EditInformation() {
     }
     return (
         <View style={styles.container}>
+            <AppBarCliente />
             <Formik
                 initialValues={{
                     nombres: nombre,
