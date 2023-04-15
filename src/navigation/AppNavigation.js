@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import IndexScreen from "../screens/IndexScreen";
 import RegistrationScreen from "../screens/RegistrationScreen";
 import PasswordScreen from "../screens/PasswordScreen";
-import HomeCScreen from "../screens/HomeCScreen";
+import HomeCScreen from "../screens/cliente/HomeCScreen";
 import HomeIScreen from "../screens/entrenador/HomeIScreen";
 import RoutinesScreen from "../screens/entrenador/RoutinesScreen";
 import ClientsScreen from "../screens/entrenador/ClientsScreen";
@@ -11,6 +11,7 @@ import ClientDataScreen from "../screens/entrenador/ClientDataScreen";
 import EditRoutines from "../screens/entrenador/EditRoutines"
 import DeleteRoutines from "../screens/entrenador/DeleteRoutines";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import InformationScreen from "../screens/cliente/InformationScreen";
 const Stack = createNativeStackNavigator();
 
 
@@ -27,7 +28,8 @@ export default function AppNavigation() {
             <Stack.Screen name="clients" component={ClientsScreen} options={{title:"Clientes"}} />
             <Stack.Screen name="clientData" component={ClientDataScreen} options={{title:"Datos del cliente"}} />
             <Stack.Screen name="editRoutines" component={EditRoutines} options={{title:"Editar rutina"}}/>
-        </Stack.Navigator>
-       
+            {/* Temporalmente las pantallas de cliente */}
+            <Stack.Screen name="infoClientScreen" component={InformationScreen} options={{title:"Informacion Cliente"}}/>
+        </Stack.Navigator> 
     );
 }
