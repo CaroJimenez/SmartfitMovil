@@ -15,7 +15,7 @@ export default function IndexScreen(props) {
     const [password, setPassword] = useState(false);
     const handleLogin = async () => {
         try {
-            const response = await axios.post('http://192.168.49.163:8090/auth/login', {
+            const response = await axios.post('http://192.168.1.76:8090/auth/login', {
                 email: formik.values.email,
                 password: formik.values.password,
             });
@@ -23,7 +23,7 @@ export default function IndexScreen(props) {
             await AsyncStorage.setItem('token', token); // guardar token en el dispositivo
             if(response.data.authorities[0].authority == "ROLE_INSTRUCTOR"){
                 navigation.navigate('clients'); // redirigir a pantalla de inicio de sesión exitoso
-            }else if(response.data.authorities[0].authority == "ROLE_CLIENT"){
+            }else if(response.data.authorities[0].authority == "ROLE_USER"){
                 navigation.navigate('homeClient'); // redirigir a pantalla de inicio de sesión exitoso
             }
         } catch (error) {
