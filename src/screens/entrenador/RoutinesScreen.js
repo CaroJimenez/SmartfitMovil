@@ -2,7 +2,7 @@ import { TextInput } from 'react-native';
 import React, { useState, useEffect } from "react";
 import { StyleSheet } from 'react-native';
 import { View, Text, StatusBar, TouchableOpacity, SafeAreaView, Image } from 'react-native';
-import { Input, Button } from 'react-native-elements';
+import { Input, Button, Icon} from 'react-native-elements';
 import { Picker } from '@react-native-picker/picker';
 import colors from "../../utils/colors";
 import * as yup from 'yup';
@@ -17,11 +17,27 @@ export default function RoutinesScreen(props) {
     const { alumnoId } = route.params;
     const [exercise, setExercise] = useState('default');
     const [ejercicios, setEjercicios] = useState([]);
-    
+    //lista de ejercicios seleccionados
+    const [selectedExercises, setSelectedExercises] = useState([]);
+
+//funciones para guardar pickers
+    const addPicker = () => {
+        setSelectedExercises([...selectedExercises, '']);
+    }
+    const savePickers = () => {
+        console.log("LISTOS PARA ENVIAR"+selectedExercises);
+        console.log("TAMAÑO DE LA LISTA"+selectedExercises.length);
+    }
+
+    const handleSave = (value, index) => {
+        const newExercises = [...selectedExercises];
+        newExercises[index] = value;
+        setSelectedExercises(newExercises);
+    }
 
     //acceder al servicio de ejercicios con fetch
     const getEjercicios = async () => {
-        const response = await fetch('http://192.168.49.163:8090/auth/listExercise');
+        const response = await fetch('http://192.168.0.7:8090/auth/listExercise');
         const data = await response.json();
         setEjercicios(data);
     }
@@ -41,10 +57,15 @@ export default function RoutinesScreen(props) {
             description: yup.string().required("Descripción obligatoria"),
         }),
         validateOnChange: false,
-        //registra un usuario
-        onSubmit: async (formValue, { setSubmitting }) => {
+
+
+
+
+        //registra una rutina
+        onSubmit: async (formValue, ejercicios, { setSubmitting }) => {
             //insertar rutina con fetch
-            const response = await fetch('http://192.168.137.150:8090/auth/addRoutine', {
+            console.log(ejercicios);
+           /* const response = await fetch('http://192.168.0.7:8090/auth/addRoutine', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -67,9 +88,9 @@ export default function RoutinesScreen(props) {
                 text1: 'Rutina creada',
                 text2: 'La rutina se ha creado correctamente',
             });
-            setSubmitting(false);
+            setSubmitting(false);*/
         }
-    });
+    }  );
 
 
     return (
@@ -83,40 +104,72 @@ export default function RoutinesScreen(props) {
                 source={require("../../../assets/franja_azul.png")}
             />
                 <View style={styles.contenedor}>
-                <Text style={styles.title}>Llena los campos para crear una rutina</Text>
+                <Text style={styles.title}>Crea una nueva rutina</Text>
+                <View style={styles.inputName}>
                 <Input placeholder="Nombre de la rutina" 
                 onChangeText={formik.handleChange('nameRoutine')}
                 errorMessage={formik.errors.nameRoutine}
+                inputStyle={{fontSize: 15, textAlign: 'center', underlineColorAndroid: '#FFF'}}
                 />
+                </View>
+                <View style={styles.inputName}>
                 <Input placeholder="Descripción" 
                 onChangeText={formik.handleChange('description')}
                 errorMessage={formik.errors.description}
+                inputStyle={{fontSize: 15, textAlign: 'center'}}
                 />
-                <View style={[styles.contExercise, styles.inputs]}>
-                    <Picker
-                        selectedValue={exercise}
-                        onValueChange={(itemValue) => {
-                            setExercise(itemValue);
-                            formik.setFieldValue('exercise', itemValue);
-                        }}>
-                        <Picker.Item label="Selecciona un ejercicio" value="" />
-                        {ejercicios.map((ejercicio, index) => (
-                            <Picker.Item
-                                key={ejercicio.id}
-                                label={ejercicio.name}
-                                value={ejercicio.id}
-                            />
-                        ))}
-                    </Picker>
                 </View>
-               
 
-                <Button
-                    title="Guardar rutina"
-                    buttonStyle={{ backgroundColor: colors.AZUL_OSUCRO, borderRadius: 30, width: 200, height: 40, marginTop: 20, marginBottom: 20 }}
-                    onPress={formik.handleSubmit}
-                    loading={formik.isSubmitting}
-                />
+
+
+
+
+
+
+                {/*PICKERS */}
+                <View style={[styles.contExercise, styles.inputs]}>
+        {selectedExercises.map((exerciseId, index) => (
+            <Picker
+                key={index}
+                selectedValue={exerciseId}
+                onValueChange={(itemValue) => handleSave(itemValue, index)}
+            >
+                <Picker.Item label="Selecciona un ejercicio" value="" />
+                {ejercicios.map((ejercicio) => (
+                    <Picker.Item key={ejercicio.id} label={ejercicio.name} value={ejercicio.id} />
+                ))}
+            </Picker>
+        ))}
+
+        <Button
+            icon={<Icon type="material-community" name="plus" size={20} color="white" />}
+            onPress={addPicker}
+            buttonStyle={{
+                backgroundColor: colors.VERDE_OSCURO,
+                borderRadius: 30,
+                width: 40,
+                height: 40,
+                marginTop: 10,
+                marginBottom: 20,
+                marginLeft: 100,
+            }}
+        />
+
+        <Button
+            title="Guardar"
+            buttonStyle={{
+                backgroundColor: colors.AZUL_OSUCRO,
+                borderRadius: 30,
+                width: 100,
+                height: 40,
+                marginTop: 20,
+                marginBottom: 20,
+            }}
+            onPress={savePickers}
+           // onPress={() => formik.handleSubmit([...selectedExercises, lastExercise])}
+            //loading={formik.isSubmitting}
+        />
+    </View>
                 </View>
                
             </View>
@@ -180,5 +233,22 @@ const styles = StyleSheet.create({
         top: 20,
         right: -200,
         zIndex: -1,
-    }
+    },
+    inputs: {
+        width: '70%',
+        //poner bordes
+        borderRadius: 10,
+        borderColor: 'black',
+        backgroundColor: '#F2F2F2',
+        marginBottom: 20,
+
+    },
+    inputName: {
+        width: '70%',
+        height: 40,
+        marginBottom: 20,
+        backgroundColor: '#F2F2F2',
+        borderRadius: 10,
+      }
+      
 });

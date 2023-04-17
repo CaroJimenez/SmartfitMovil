@@ -8,7 +8,8 @@ import colors from "../../utils/colors";
 const image = { uri: "" };
 export default function ClientsScreen(props) {
     const { navigation } = props;
-    const [filter, setFilter] = useState('default');
+    const [search, setSearch] = useState('');
+
     const selectClient = (id_alumno) => {
         //mandar el id recibido y navegar a la pantalla de datos del cliente
         navigation.navigate("clientData", { id_alumno})
@@ -40,10 +41,16 @@ export default function ClientsScreen(props) {
     //mandar a traer el servicio de listar clientes con fetch
     const [clients, setClients] = useState([]);
     const getClients = async () => {
-        const response = await fetch('http://192.168.49.163:8090/auth/listaAlumnos');
+        const response = await fetch('http://192.168.0.7:8090/auth/listaAlumnos');
         const data = await response.json();
         setClients(data);
+        
     }
+    const filteredClients = clients.filter(client =>
+        client.name.toLowerCase().includes(search.toLowerCase()) ||
+        client.last_name.toLowerCase().includes(search.toLowerCase()) ||
+        client.email.toLowerCase().includes(search.toLowerCase())
+      );
     useEffect(() => {
         getClients();
     }, []);
@@ -53,9 +60,6 @@ export default function ClientsScreen(props) {
         <ScrollView>
         <View style={styles.background}>
 
-
-
-
             <Image
                 style={styles.img}
                 source={require("../../../assets/circulo_verde.png")}
@@ -64,24 +68,11 @@ export default function ClientsScreen(props) {
                 style={styles.img2}
                 source={require("../../../assets/franja_azul.png")}
             />
-            <View style={[styles.contSearch, styles.inputs, {marginTop:20}]}>
-                <Picker
-                    selectedValue={filter}
-                    onValueChange={(itemValue) => {
-                        setFilter(itemValue);
-                        formikFilter.setFieldValue('clientFilter', itemValue);
-                        formikFilter.handleSubmit();
-                    }}
-                >
-                    <Picker.Item label="Buscar por..." value="" />
-                    <Picker.Item label="Nuevos usuarios" value="NewUsers" />
-                    <Picker.Item label="Genero" value="Gender" />
-                    <Picker.Item label="A-Z" value="A_Z" /></Picker>
-            </View>
             <View style={[styles.contSearch, styles.inputs]}>
                 <Input
                     placeholder="Buscar usuario" style={{ fontSize: 15.5 }}
-                    onChangeText={(text) => formikSearch.setFieldValue("searchClient", text)}
+                    defaultValue={search}
+                    onChange={event => setSearch(event.nativeEvent.text)}
                     rightIcon={
                         <Icon
                             onPress={formikSearch.handleSubmit}
@@ -94,21 +85,21 @@ export default function ClientsScreen(props) {
             {/*
         mapear clientes y mostrarlos en un view
         */}
-            {clients.map((client, index) => (
-                <View key={client.id} style={[styles.client]}>
-                    <View style={styles.datos}>
-                        <Text style={[styles.text, {fontWeight:'bold'}]}>{client.name} {client.last_name}</Text>
-                        <Text style={[styles.text]}>{client.email} </Text>
+           {filteredClients.map((client, index) => (
+  <View key={client.id} style={[styles.client]}>
+    <View style={styles.datos}>
+      <Text style={[styles.text, {fontWeight:'bold'}]}>{client.name} {client.last_name}</Text>
+      <Text style={[styles.text]}>{client.email} </Text>
 
-                        <View style={{ position: 'absolute', right: 0, marginRight: 15, marginTop: 15 }}>
-                            <Icon
-                                //navegar a la pantalla de datos del cliente y mandarle el id del cliente
-                                onPress={() => selectClient(client.id)}
-                                type="material-community" name="eye-outline" size={20} color="#333" />
-                        </View>
-                    </View>
-                </View>
-            ))}
+      <View style={{ position: 'absolute', right: 0, marginRight: 15, marginTop: 15 }}>
+        <Icon
+          onPress={() => selectClient(client.id)}
+          type="material-community" name="eye-outline" size={20} color="#333" />
+      </View>
+    </View>
+  </View>
+))}
+
 
 
         </View>

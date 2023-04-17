@@ -14,7 +14,7 @@ export default function ClientDataScreen(props) {
     //mandar a traer el servicio de listar alumno mediante el id con fetch
     const [alumnos, setAlumnos] = useState([]);
     const getAlumnos = async () => {
-        const response = await fetch(`http://192.168.49.163:8090/auth/alumno/${id_alumno}`)
+        const response = await fetch(`http://192.168.0.7:8090/auth/alumno/${id_alumno}`)
         const data = await response.json();
         setAlumnos(data);
         
@@ -47,6 +47,15 @@ listar view de alumnos
 
 */}
    <View>
+   <Image
+                style={styles.img}
+                source={require("../../../assets/circulo_verde.png")}
+            />
+
+<Image
+                style={styles.img2}
+                source={require("../../../assets/franja_azul.png")}
+            />
       {/* mostrar datos de solo un alumno */}
         
             <View >
@@ -155,5 +164,27 @@ const styles = StyleSheet.create({
         //ajustar tamaño al contenido
         width: '70%',
 
+    },
+    img:
+    {
+        width: 500,
+        height: 500,
+        marginBottom: 10,
+        marginTop: 500,
+        position: 'absolute',
+        top: -800,
+        left: -500,
+        zIndex: -1,
+    },
+
+    img2:{
+        width: 500,
+        height: 500,
+        marginBottom: 10,
+        marginTop: 400,
+        position: 'absolute',
+        top: -10,
+        right: -350,
+        zIndex: -1,
     }
 })

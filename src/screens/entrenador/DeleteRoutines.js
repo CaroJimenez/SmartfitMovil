@@ -1,116 +1,127 @@
-import { TextInput } from 'react-native';
 import React, { useState, useEffect } from "react";
-import { StyleSheet, ImageBackground, FlatList } from 'react-native';
+import { StyleSheet, Alert} from 'react-native';
 import { View, Text, StatusBar, TouchableOpacity, SafeAreaView, Image } from 'react-native';
 import { Input, Button, Icon } from 'react-native-elements';
-import { Picker } from '@react-native-picker/picker';
 import colors from "../../utils/colors";
-import * as yup from 'yup';
-import axios from 'axios';
-import { useFormik } from 'formik';
+import Toast from "react-native-toast-message";
 
 export default function DeleteRoutines(props) {
-    const { navigation, route} = props;
+    const { navigation, route } = props;
     const { alumnoId } = route.params;
     const [rutinas, setRutinas] = useState([]);
+    
     const getRutinas = async () => {
-        const response = await fetch(`http://192.168.49.163:8090/auth/user/${alumnoId}`)
-        const data = await response.json();
-        setRutinas(data);
-     
-    }
+        try {
+          const response = await fetch(`http://192.168.0.7:8090/auth/user/${alumnoId}`, { timeout: 120000 });
+          const data = await response.json();
+          setRutinas(data);
+        } catch (error) {
+          console.log("An error occurred while fetching the data:", error);
+        }
+      }
+      
     useEffect(() => {
         getRutinas();
-        deleteRoutine();
     }, []);
 
-//funcion para eliminar una rutina
-const deleteRoutine = async (nameRoutine) => {
- /*
-        let response = await fetch(`http://192.168.137.84:8090/auth/user/${alumnoId}/${nameRoutine}`, {
-            method: "DELETE",
-            headers: {
-                'Content-Type': 'application/json'
+
+    //funcion para eliminar una rutina
+    const deleteRoutine = async (nameRoutine) => {
+        if (nameRoutine === "undefined") {
+          console.log("no se puede eliminar");
+        } else {
+          Alert.alert(
+            "Eliminar rutina",
+            `¿Estás seguro que quieres eliminar la rutina ${nameRoutine}?`,
+            [
+              {
+                text: "Cancelar",
+                style: "cancel",
               },
-              body: null
-        }).then(res => {
-        return res.json()
-      }) 
-      .then(data => console.log(data))*/
-    
-    
-
-
-  }
-  
-
-
-
-       /* */
-    
-
-    const formik = useFormik({
-        initialValues: {
-            nameRoutine: "",
-        },
-        validationSchema: yup.object({
-            nameRoutine: yup.string().required("Nombre de la rutina obligatorio"),
-        }),
-        validateOnChange: false,
-        //registra un usuario
-        onSubmit: async (formValue, { setSubmitting }) => {
-            const nameRoutine = formValue.nameRoutine;
-            deleteRoutine(nameRoutine);
-            
+              {
+                text: "Eliminar",
+                onPress: async () => {
+                  let response = await fetch(`http://192.168.0.7:8090/auth/${alumnoId}/${nameRoutine}`, {
+                    method: "DELETE",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: {}
+                    
+                  })
+                  .catch(error => {
+                      console.log("Error occurred while making the request:", error);
+                  });
+                  navigation.navigate("clientData", {alumnoId});
+                  Toast.show({
+                    type: 'success',
+                    text1: 'Rutina eliminada',
+                    text2: 'La rutina se ha eliminado correctamente',
+                  });
+                },
+                style: "destructive",
+              },
+            ]
+          );
         }
-    });
+      }
+      
 
     return (
-        
-            <View style={styles.container}>
-                <View style={styles.inputContainer}>
-                <Text style={styles.title}>Ingresa el nombre de la rutina que quieres eliminar</Text>
-                <Input placeholder="Nombre de la rutina" 
-                onChangeText={formik.handleChange("nameRoutine")}
-                errorMessage={formik.errors.nameRoutine}
-                style={styles.input}
-                />
-                <Button
-                    onPress={formik.handleSubmit}
-                    loading={formik.isSubmitting}
-                    icon={
-                        <Icon
-                            type='material-community'
-                            name="trash-can-outline"
-                            size={25}
-                            color="white"
-                        />}
-                    buttonStyle={{ backgroundColor: "#DD4614", borderRadius: 30, width: 50, height: 40, marginTop: 20 }}
-                />
 
-                </View>
-               
+        <View style={styles.container}>
+            <Image
+                style={styles.img}
+                source={require("../../../assets/circulo_verde.png")}
+            />
+            <Image
+                style={styles.img2}
+                source={require("../../../assets/franja_azul.png")}
+            />
 
-                <View style={styles.contenido}>
+            <Text style={styles.title}>Eliminar Rutinas</Text>
+            <View style={styles.contenido}>
                 <View style={styles.cabecera}>
                     <Text style={styles.textCabecera}>Nombre</Text>
-                    <Text style={styles.textCabecera}>Descripcion</Text>
                 </View>
-                {rutinas.map((rutina, index) => (
-                    <View key={index} style={styles.contExercise}>
-                        <Text style={styles.name}>{rutina.name}</Text>
-                        <Text style={styles.name}>{rutina.description}</Text>
-                        <View style={styles.vline}></View>
-                    </View>
-                ))}
+
+                <View style={styles.tabla}>
+                    {rutinas.map((rutina) => (
+                        <View key={rutina.id_routines} style={styles.contExercise}>
+                            <Text style={styles.name}>{rutina.name}</Text>
+                            <View style={styles.iconos}>
+                                <Button
+                                    icon={
+                                        <Icon
+                                            type='material-community'
+                                            name="trash-can-outline"
+                                            size={20}
+                                            color="white"
+                                        />}
+
+                                    onPress={() => deleteRoutine(rutina.name)}
+                                    buttonStyle={{ backgroundColor: "#DD4614", borderRadius: 30, width: 40, height: 40 }}
+                                />
+                                <Button
+                                    icon={
+                                        <Icon
+                                            type='material-community'
+                                            name="eye-outline"
+                                            size={20}
+                                            color="white"
+                                        />}
+                                    buttonStyle={{ backgroundColor: colors.AZUL_OSUCRO, borderRadius: 30, width: 40, height: 40 }}
+                                />
+                            </View>
+                        </View>
+                    ))}
 
 
                 </View>
-               
-               
-
             </View>
-            
+
+        </View>
+
     );
 }
 
@@ -120,7 +131,6 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         textAlign: "center",
         color: colors.AZUL_CLARO,
-        marginTop: 20,
         marginBottom: 20,
     },
     container: {
@@ -131,70 +141,69 @@ const styles = StyleSheet.create({
 
     },
     contExercise: {
-        marginTop: 20,
-        width: '70%',
-        //alinear items a los lados
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-
+        marginBottom: 15,
     }
     ,
     name: {
-        fontSize: 17,
-        textAlign: "center",
+        fontSize: 16,
         marginBottom: 5,
-        marginLeft: 20,
+        marginLeft: 50,
+        marginTop: 10,
     },
-    cabecera:{
-        //alinear uno a un lado de otro
+    cabecera: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        width: '70%',
+        width: '60%',
         marginTop: 20,
-        marginBottom: 20,  
     },
-    textCabecera:{
-        fontSize: 20,
+    textCabecera: {
+        fontSize: 17.8,
         fontWeight: "bold",
-        textAlign: "center",
         color: colors.AZUL_OSUCRO,
-        marginBottom: 5,
-        marginLeft: 20,
-        marginRight: 40,
+        marginBottom: 4,
+        marginLeft: 50,
     },
-    contenido:{
+    contenido: {
         marginTop: 20,
-        width:'100%',
-        //alinear items a los lados
-        flexDirection: 'column',
-        justifyContent: 'space-between',
+        width: '100%',
         backgroundColor: 'white',
         width: '80%',
         borderRadius: 20,
     },
-    vline: {
-        borderLeftWidth: 1,
-        borderLeftColor: 'black',
-        height: '100%',
+    iconos: {
+        flexDirection: 'row',
+        marginLeft: 50,
+        //posicionar iconos a la derecha
         position: 'absolute',
-        left: '65%',
+        right: 0,
+        marginRight: 20,
+
     },
-    input: {
-        height: 45,
-        //poner bordes
-        borderWidth: 1,
-        borderRadius: 10,
-        borderColor: 'black',
-        backgroundColor: '#EEEEEE',
-        marginBottom: 20,
-    },
-    inputContainer: {
-        width: '80%',
-        //alinear items a los lados
+    tabla: {
         flexDirection: 'column',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        width: '100%',
+        marginTop: 20,
+        marginBottom: 10,
+    },
+    img:
+    {
+        width: 500,
+        height: 500,
+        marginBottom: 10,
+        marginTop: 500,
+        position: 'absolute',
+        top: 0,
+        left: -250,
+        zIndex: -1,
+    },
+    img2: {
+        width: 500,
+        height: 500,
+        marginBottom: 10,
+        marginTop: -100,
+        position: 'absolute',
+        top: -10,
+        right: 10,
+        zIndex: -1,
     },
 });
