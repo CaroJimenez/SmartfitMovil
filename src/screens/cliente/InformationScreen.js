@@ -44,12 +44,7 @@ export default function InformationScreen() {
     }, []);
 
     const handleEditPress = () => {
-        navigation.navigate('editInfoScreen', { values });
-    };
-
-    const handleChangePress = () => {
-        //navigation.navigate('cambiarContra');
-        console.log('cambiar contraseña');
+        navigation.navigate('editInfoClientScreen', { values });
     };
 
     // // Si no hay valores, no se ha cargado la información del usuario
@@ -79,9 +74,6 @@ export default function InformationScreen() {
             <Text style={styles.input}>{values.height}<Text>cm</Text></Text>
             <Text>Fecha de nacimiento:</Text>
             <Text style={styles.input}>{values.birthdate}</Text>
-            <TouchableOpacity style={styles.botonIzquierdo} onPress={handleChangePress}>
-                <Text style={{ color: '#fff', fontSize: 14 }}>Cambiar contraseña   <Icon name="lock" size={20} color="white" /></Text>
-            </TouchableOpacity>
             <TouchableOpacity style={styles.botonDerecho} onPress={handleEditPress}>
                 <Text style={{ color: '#fff', fontSize: 14 }}>Editar Información   <Icon name="pencil" size={20} color="white" /> </Text>
             </TouchableOpacity>
@@ -100,26 +92,13 @@ const styles = StyleSheet.create({
         borderRadius: 32,
         paddingHorizontal: 10,
     },
-    botonIzquierdo: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        position: 'absolute',
-        borderRadius: 15,
-        backgroundColor: 'blue',
-        position: 'absolute',
-        width: 159.57,
-        height: 47.75,
-        left: 11,
-        top: 569,
-    },
     botonDerecho: {
         justifyContent: 'center',
         alignItems: 'center',
         position: 'absolute',
         width: 159.57,
         height: 47.75,
-        left: 188,
-        top: 568,
+        bottom:5,
         borderRadius: 15,
         backgroundColor: 'red',
     },

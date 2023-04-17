@@ -9,12 +9,12 @@ export default function HomeCScreen() {
     const navigation = useNavigation();
 
     const handleMiInformacionPress = () => {
-        navigation.navigate('infoScreen');
+        navigation.navigate('infoClientScreen');
         console.log("presionaste el boton de mi informacion")
     };
 
     const handleRutinaPress = () => {
-        // navigation.navigate('RutinaScreen');
+        navigation.navigate('rotineScreen');
         console.log("presionaste el boton de rutina")
     };
 

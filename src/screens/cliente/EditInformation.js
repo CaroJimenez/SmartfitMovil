@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
         width: 159.57,
         height: 47.75,
         left: 11,
-        top: 569,
+        bottom:5,
     },
     botonDerecho: {
         justifyContent: 'center',
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
         width: 159.57,
         height: 47.75,
         left: 188,
-        top: 568,
+        bottom:5,
         borderRadius: 15,
         backgroundColor: 'red',
     },

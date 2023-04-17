@@ -12,6 +12,8 @@ import EditRoutines from "../screens/entrenador/EditRoutines"
 import DeleteRoutines from "../screens/entrenador/DeleteRoutines";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import InformationScreen from "../screens/cliente/InformationScreen";
+import EditInformationScreen from "../screens/cliente/EditInformation";
+import ExerciseScreen from "../screens/cliente/ExerciseScreen";
 const Stack = createNativeStackNavigator();
 
 
@@ -30,6 +32,9 @@ export default function AppNavigation() {
             <Stack.Screen name="editRoutines" component={EditRoutines} options={{title:"Editar rutina"}}/>
             {/* Temporalmente las pantallas de cliente */}
             <Stack.Screen name="infoClientScreen" component={InformationScreen} options={{title:"Informacion Cliente"}}/>
+            <Stack.Screen name="editInfoClientScreen" component={EditInformationScreen} options={{title:"Edit Informacion Cliente"}}/>
+            <Stack.Screen name="rotineScreen" component={RoutinesScreen} options={{title:"Rutina"}}/>
+            <Stack.Screen name="exerciseScreen" component={ExerciseScreen} options={{title:"Ejercicios"}}/>
         </Stack.Navigator> 
     );
 }
