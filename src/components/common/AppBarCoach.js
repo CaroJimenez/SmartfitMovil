@@ -6,7 +6,7 @@ import React from 'react'
 export default function AppBarCoach() {
     const navigation = useNavigation();
     const handleLogout = () => {
-        navigation.navigate('homeInstructor');
+        navigation.navigate('clientData');
         console.log("presionaste ir a inicio");
     }
     return (
