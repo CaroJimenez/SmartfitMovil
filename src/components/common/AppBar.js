@@ -1,19 +1,27 @@
 import { StyleSheet, Text, View, Image } from 'react-native'
-import React from 'react'
 import { Appbar } from 'react-native-paper';
+import React from 'react'
+import { useNavigation } from '@react-navigation/native';
+
 
 export default function AppBar() {
-    //Aqui debe ir la opcion de redirigir al login
+    const navigation = useNavigation();
+
     const handleLogout = () => {
-        console.log("presionaste salir")
-    }
+        navigation.reset({
+            index: 0,
+            routes: [{ name: 'index' }],
+        });
+    };
+
     return (
         <Appbar.Header style={styles.appBarStile}>
             <Image source={require('../../../assets/imagenes/SmartFitPB.png')} style={styles.imageStile} />
             <Appbar.Action icon="logout" onPress={handleLogout} iconColor="white" style={styles.icono} />
         </Appbar.Header>
     )
-}
+};
+
 
 const styles = StyleSheet.create({
     appBarStile: {
@@ -30,8 +38,8 @@ const styles = StyleSheet.create({
     },
     icono: {
         position: 'absolute',
-        fontSize: 24,
+        width: 60,
+        height: 60,
         left: 280,
-        top: 10,
     }
 })
