@@ -57,7 +57,7 @@ export default function RoutineScreen() {
                 },
                 {
                     nombre: 'Abdominales',
-                    repeticiones: '5x10',
+                    repeticiones: '5x11',
                     link: 'https://www.youtube.com/watch?v=mMieHCr-H0c&pp=ygULYWJkb21pbmFsZXM%3D'
                 },
                 {
