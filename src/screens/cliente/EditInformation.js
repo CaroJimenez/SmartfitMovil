@@ -26,7 +26,7 @@ export default function EditInformation() {
     const [fechaNacimiento, setFechaNacimiento] = useState('');
     const navigation = useNavigation();
     //El route nos permite obtener los parametros que se mandan de una pantalla a otra
-    const route = useRoute();
+   const route = useRoute();
     //Data es el objeto que contiene los datos del usuario
     const { data } = route.params;
 
@@ -35,7 +35,7 @@ export default function EditInformation() {
     }
 
     const actualizarPantalla = () => {
-        route.params.onUpdate();
+        //route.params.onUpdate();
     }
     //Aqui imprime la data pa ver que rollo
     console.log(data);

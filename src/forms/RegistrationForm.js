@@ -7,6 +7,7 @@ import * as yup from 'yup';
 import { useFormik } from "formik";
 import { useNavigation } from "@react-navigation/native";
 
+import Toast from "react-native-toast-message";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function RegistrationForm() {
@@ -41,13 +42,12 @@ export default function RegistrationForm() {
             email: "",
             password: "",
             repeatPassword: "",
-            // objective: ""
-
         },
         //validaciones del formulario
         validationSchema: yup.object({
             email: yup.string()
-                .email("Formato de correo no válido")
+                .email("Formato de correo no válido").
+                matches(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/, "Formato de correo no válido")
                 .required("Email obligatorio"),
             password: yup.string().required("Contraseña obligatoria"),
             repeatPassword: yup.string()
@@ -59,8 +59,7 @@ export default function RegistrationForm() {
             gender: yup.string().required("Por favor selecciona un género"),
             weight: yup.string().required("Ingresa tu peso, si no lo sabes puedes poner uno aproximado"),
             height: yup.string().required("Ingresa tu altura, si no la conoces puedes poner una aproximada"),
-            objective: yup.string().required("Menciona un objetivo, si no tienes alguno puedes escribir NO APLICA")
-        }),
+              }),
         validateOnChange: false,
         //registra un usuario
         onSubmit: async (formValue, { setSubmitting }) => {
@@ -80,7 +79,7 @@ export default function RegistrationForm() {
             //convertir a JSON
             const jsonData = JSON.stringify(formData);
             //enviar datos al servidor
-            fetch('http://192.168.137.137:8090/auth/nuevoUsuario', {
+            fetch('http://35.174.172.150:8080/auth/nuevoUsuario', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -90,7 +89,18 @@ export default function RegistrationForm() {
                 .then(response => response.json())
                 .then(data => console.log(data))
                 .catch(error => console.error(error));
-            console.log(formData);
+                navigation.navigate("index");
+            Toast.show({
+                type: "success",
+                position: "top",
+                text1: "Registro exitoso",
+                text2: "Ahora puedes iniciar sesión",
+                visibilityTime: 3000,
+                autoHide: true,
+                topOffset: 30,
+                bottomOffset: 40,
+            });
+
             setSubmitting(false);
         }
 
@@ -236,19 +246,7 @@ export default function RegistrationForm() {
                     errorMessage={formik.errors.repeatPassword}
                 />
 
-                <Input
-                    placeholder="Objetivo en Smartfit UTEZ"
-                    containerStyle={styles.inputs}
-                    rightIcon={
-                        <Icon
-                            type="material-community"
-                            name="flag-checkered"
-                            iconStyle={styles.icon}
-                        />
-                    }
-                    onChangeText={(text) => formik.setFieldValue("objective", text)}
-                    errorMessage={formik.errors.objective}
-                />
+             
 
                 <Button
                     title="Registrarse"

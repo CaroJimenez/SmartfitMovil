@@ -14,6 +14,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import InformationScreen from "../screens/cliente/InformationScreen";
 import EditInformationScreen from "../screens/cliente/EditInformation";
 import ExerciseScreen from "../screens/cliente/ExerciseScreen";
+import RoutineScreen from "../screens/cliente/RoutineScreen";
+import ProgresoScreen from "../screens/cliente/ProgresoScreen";
+import ClientRoutines from "../screens/entrenador/ClientRoutines";
+import EditClient from "../screens/cliente/EditClient";
 const Stack = createNativeStackNavigator();
 
 
@@ -30,11 +34,14 @@ export default function AppNavigation() {
             <Stack.Screen name="clients" component={ClientsScreen} options={{title:"Clientes"}} />
             <Stack.Screen name="clientData" component={ClientDataScreen} options={{title:"Datos del cliente"}} />
             <Stack.Screen name="editRoutines" component={EditRoutines} options={{title:"Editar rutina"}}/>
+            <Stack.Screen name="routinesClient" component={ClientRoutines} options={{title:"Rutinas del cliente"}}/>
             {/* Temporalmente las pantallas de cliente */}
             <Stack.Screen name="infoClientScreen" component={InformationScreen} options={{title:"Informacion Cliente"}}/>
-            <Stack.Screen name="editInfoClientScreen" component={EditInformationScreen} options={{title:"Edit Informacion Cliente"}}/>
-            <Stack.Screen name="rotineScreen" component={RoutinesScreen} options={{title:"Rutina"}}/>
+            <Stack.Screen name="editInfoClientScreen" component={EditClient} options={{title:"Edit Informacion Cliente"}}/>
+            <Stack.Screen name="editClient" component={EditClient} options={{title:"Edit Informacion Cliente"}}/>
+            <Stack.Screen name="rotineScreen" component={RoutineScreen} options={{title:"Rutina"}}/>
             <Stack.Screen name="exerciseScreen" component={ExerciseScreen} options={{title:"Ejercicios"}}/>
+            <Stack.Screen name = "progresoS" component={ProgresoScreen} options={{title:"Progreso"}}/>
         </Stack.Navigator> 
     );
 }

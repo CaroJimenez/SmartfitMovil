@@ -14,15 +14,15 @@ export default function ClientDataScreen(props) {
     //mandar a traer el servicio de listar alumno mediante el id con fetch
     const [alumnos, setAlumnos] = useState([]);
     const getAlumnos = async () => {
-        const response = await fetch(`http://192.168.0.7:8090/auth/alumno/${id_alumno}`)
+        const response = await fetch(`http://192.168.0.4:8090/auth/alumno/${id_alumno}`)
         const data = await response.json();
         setAlumnos(data);
-        
+
     }
     useEffect(() => {
         getAlumnos();
     }, []);
-//obtener el imc
+    //obtener el imc
     const height = alumnos.height;
     const weight = alumnos.current_weight;
     const imc = weight / (height * height);
@@ -46,77 +46,77 @@ export default function ClientDataScreen(props) {
 listar view de alumnos
 
 */}
-   <View>
-   <Image
-                style={styles.img}
-                source={require("../../../assets/circulo_verde.png")}
-            />
+            <View>
+                <Image
+                    style={styles.img}
+                    source={require("../../../assets/circulo_verde.png")}
+                />
 
-<Image
-                style={styles.img2}
-                source={require("../../../assets/franja_azul.png")}
-            />
-      {/* mostrar datos de solo un alumno */}
-        
-            <View >
-                <Text style={{fontSize:20, marginBottom:20, fontWeight:'bold'}}>{alumnos.name} {alumnos.last_name}  </Text>
-                <Text style={{fontSize:20, marginBottom:20}}>{alumnos.email}</Text>
-                
-                <Text style={styles.text}>Genero: </Text>
-                <Text style={styles.datos}>{alumnos.gender}</Text>
-                <Text style={styles.text}>Altura: </Text>
-                <Text style={styles.datos}>{alumnos.height}</Text>
-                <Text style={styles.text}>Peso: </Text>
-                <Text style={styles.datos}>{alumnos.current_weight}</Text>
-                <Text style={styles.text}>IMC: </Text>
-                <Text style={styles.datos}>{imc}</Text>
-                <Text style={styles.text}>Edad: </Text>
-                <Text style={styles.datos}>{edad}</Text>
+                <Image
+                    style={styles.img2}
+                    source={require("../../../assets/franja_azul.png")}
+                />
+                {/* mostrar datos de solo un alumno */}
+
+                <View >
+                    <Text style={{ fontSize: 20, marginBottom: 20, fontWeight: 'bold' }}>{alumnos.name} {alumnos.last_name}  </Text>
+                    <Text style={{ fontSize: 20, marginBottom: 20 }}>{alumnos.email}</Text>
+
+                    <Text style={styles.text}>Genero: </Text>
+                    <Text style={styles.datos}>{alumnos.gender}</Text>
+                    <Text style={styles.text}>Altura: </Text>
+                    <Text style={styles.datos}>{alumnos.height}</Text>
+                    <Text style={styles.text}>Peso: </Text>
+                    <Text style={styles.datos}>{alumnos.current_weight}</Text>
+                    <Text style={styles.text}>IMC: </Text>
+                    <Text style={styles.datos}>{imc}</Text>
+                    <Text style={styles.text}>Edad: </Text>
+                    <Text style={styles.datos}>{edad}</Text>
                 </View>
-    </View>        
+            </View>
 
-                    <Text style={{
-                        fontWeight: 'bold',
-                        fontSize: 15,
-                    }}>Administrar rutinas</Text>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
+            <Text style={{
+                fontWeight: 'bold',
+                fontSize: 15,
+            }}>Administrar rutinas</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
 
 
-                        <Button
-                           onPress={() => handleAlumnoPress(alumnos.id)}
-                            icon={
-                                <Icon
-                                    type='material-community'
-                                    name="plus"
-                                    size={25}
-                                    color="white"
-                                />}
-                            buttonStyle={{ backgroundColor: colors.AZUL_OSUCRO, borderRadius: 30, width: 100, height: 40, marginTop: 20 }}
-                        />
-                        <Button
-                            icon={
-                                <Icon
-                                    type='material-community'
-                                    name="pencil"
-                                    size={25}
-                                    color="white"
-                                />}
-                            onPress={() => navigation.navigate('editRoutines')}
-                            buttonStyle={{ backgroundColor: "#FFAF00", borderRadius: 30, width: 100, height: 40, marginTop: 20 }}
-                        />
-                        <Button
-                           onPress={() => deleteRoutines(alumnos.id)}
-                            icon={
-                                <Icon
-                                    type='material-community'
-                                    name="trash-can-outline"
-                                    size={25}
-                                    color="white"
-                                />}
-                            buttonStyle={{ backgroundColor: "#DD4614", borderRadius: 30, width: 100, height: 40, marginTop: 20 }}
-                        />
+                <Button
+                    onPress={() => handleAlumnoPress(alumnos.id)}
+                    icon={
+                        <Icon
+                            type='material-community'
+                            name="plus"
+                            size={25}
+                            color="white"
+                        />}
+                    buttonStyle={{ backgroundColor: colors.AZUL_OSUCRO, borderRadius: 30, width: 100, height: 40, marginTop: 20 }}
+                />
+                <Button
+                    icon={
+                        <Icon
+                            type='material-community'
+                            name="pencil"
+                            size={25}
+                            color="white"
+                        />}
+                    onPress={() => navigation.navigate('editRoutines', { id_alumno })}
+                    buttonStyle={{ backgroundColor: "#FFAF00", borderRadius: 30, width: 100, height: 40, marginTop: 20 }}
+                />
+                <Button
+                    onPress={() => deleteRoutines(alumnos.id)}
+                    icon={
+                        <Icon
+                            type='material-community'
+                            name="trash-can-outline"
+                            size={25}
+                            color="white"
+                        />}
+                    buttonStyle={{ backgroundColor: "#DD4614", borderRadius: 30, width: 100, height: 40, marginTop: 20 }}
+                />
 
-                    </View>
+            </View>
 
 
 
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
         zIndex: -1,
     },
 
-    img2:{
+    img2: {
         width: 500,
         height: 500,
         marginBottom: 10,

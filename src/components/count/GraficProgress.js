@@ -1,7 +1,7 @@
 import React,{ useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { LineChart } from 'react-native-chart-kit';
+//import { LineChart } from 'react-native-chart-kit';
 
 export default function GraficProgress() {
  //Podible solucion al servicio

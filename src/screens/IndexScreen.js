@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, ImageBackground, ScrollView } from 'react-native';
 import { View, Text, StatusBar, SafeAreaView, Image, TouchableOpacity, TextInput } from 'react-native';
 import colors from "../utils/colors";
@@ -10,20 +10,34 @@ import * as yup from 'yup';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
 export default function IndexScreen(props) {
     const { navigation } = props;
+    const [userId, setUserId] = useState(null);
+    const userEmail = 'user@example.com';
     const [password, setPassword] = useState(false);
     const handleLogin = async () => {
         try {
-            const response = await axios.post('http://192.168.1.76:8090/auth/login', {
-                email: formik.values.email,
-                password: formik.values.password,
+            const response = await fetch('http://192.168.0.4:8090/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: formik.values.email,
+                    password: formik.values.password,
+                })
             });
-            const token = response.data.token; // token de autenticación
-            await AsyncStorage.setItem('token', token); // guardar token en el dispositivo
-            if(response.data.authorities[0].authority == "ROLE_INSTRUCTOR"){
+
+            const data = await response.json();
+            const token = data.token; // token de autenticación
+
+            if (data.authorities[0].authority === "ROLE_INSTRUCTOR") {
                 navigation.navigate('clients'); // redirigir a pantalla de inicio de sesión exitoso
-            }else if(response.data.authorities[0].authority == "ROLE_USER"){
+            } else if (data.authorities[0].authority === "ROLE_USER") {
+                /*user = getUserByEmail(formik.values.email);
+                console.log(user.id);*/
+                getUserByEmail(data.email);
                 navigation.navigate('homeClient'); // redirigir a pantalla de inicio de sesión exitoso
             }
         } catch (error) {
@@ -34,6 +48,30 @@ export default function IndexScreen(props) {
             });
         }
     };
+
+
+    const [clients, setClients] = useState([]);
+    const getClients = async () => {
+        const response = await fetch('http://192.168.0.4:8090/auth/listaAlumnos');
+        const data = await response.json();
+        setClients(data);
+
+    }
+    useEffect(() => {
+        getClients();
+    }, []);
+
+    const getUserByEmail = async (email) => {
+        console.log(email);
+        //buscar el usuario por email mediante el api
+        clients.map((item) => {
+            if (item.email == email) {
+                console.log(item.id);
+                AsyncStorage.setItem('userId', item.id.toString());
+            }
+        })
+    }
+
 
     //valores de formik
     const formik = useFormik({
@@ -50,9 +88,10 @@ export default function IndexScreen(props) {
         validateOnChange: false,
         //registra un usuario
         onSubmit: async (formValue, { setSubmitting }) => {
-            const email = formValue.email;
-            const password = formValue.password;
-            handleLogin(); 
+            /* const userEmail = formValue.email;
+     const user = getUserByEmail(userEmail);
+     console.log(user.id);*/
+            handleLogin();
             setSubmitting(false);
         }
     });
@@ -89,31 +128,33 @@ export default function IndexScreen(props) {
                         <View style={{ alignItems: 'center' }}>
                             <Text style={styles.Text}>Bienvenido a SmartFit</Text>
 
+                            <View style={{ width: '80%' }}>
+                                <Input style={styles.inputs}
+                                    placeholder="usuario@utez.edu.mx"
+                                    rightIcon={
+                                        <Icon type="material-community" name="at" iconStyle={styles.icon} />
+                                    } onChangeText={(text) => formik.setFieldValue("email", text)}
+                                    errorMessage={formik.errors.email}
+                                />
+                            </View>
 
-                            <Input style={styles.inputs}
-                                placeholder="usuario@utez.edu.mx"
-                                rightIcon={
-                                    <Icon type="material-community" name="at" iconStyle={styles.icon} />
-                                } onChangeText={(text) => formik.setFieldValue("email", text)}
-                                errorMessage={formik.errors.email}
-                            />
+                            <View style={{ width: '80%' }}>
+                                <Input style={styles.inputs}
+                                    placeholder="****"
+                                    secureTextEntry={password ? false : true}
+                                    rightIcon={
+                                        <Icon
+                                            type="material-community"
+                                            name={password ? "eye-off-outline" : "eye-outline"}
+                                            iconStyle={styles.icon}
+                                            onPress={showPass}
+                                        />
+                                    }
+                                    onChangeText={(text) => formik.setFieldValue("password", text)}
+                                    errorMessage={formik.errors.password}
 
-                            <Input style={styles.inputs}
-                                placeholder="****"
-                                secureTextEntry={password ? false : true}
-                                rightIcon={
-                                    <Icon
-                                        type="material-community"
-                                        name={password ? "eye-off-outline" : "eye-outline"}
-                                        iconStyle={styles.icon}
-                                        onPress={showPass}
-                                    />
-                                }
-                                onChangeText={(text) => formik.setFieldValue("password", text)}
-                                errorMessage={formik.errors.password}
-
-                            />
-
+                                />
+                            </View>
 
                             <StatusBar style="auto" />
                             <View style={styles.btnContainer}>
@@ -121,18 +162,12 @@ export default function IndexScreen(props) {
                                 <Button
                                     title="Iniciar sesión"
                                     buttonStyle={styles.btn}
-                                    titleStyle={{ color: 'black' }}
+                                    titleStyle={{ color: 'white' }}
                                     onPress={formik.handleSubmit}
                                     loading={formik.isSubmitting}
                                 />
                             </View>
 
-
-                            <TouchableOpacity
-                                style={{ marginTop: 20 }}
-                                title="Registrate aquí" onPress={() => navigation.navigate("password")}>
-                                <Text style={{ textDecorationLine: 'underline' }}>¿Olvidaste tu contraseña?</Text>
-                            </TouchableOpacity>
 
                             <Text style={{ marginTop: 20 }}>¿No tienes cuenta?</Text>
                             <StatusBar style="auto" />
@@ -158,7 +193,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         backgroundColor: colors.VERDE_CLARO,
-        height:880
+        height: 880
     },
     img:
     {
@@ -170,7 +205,7 @@ const styles = StyleSheet.create({
     Text: {
         fontSize: 30,
         marginBottom: 15,
-        margin:15,
+        margin: 15,
     },
     inputs:
     {
@@ -181,40 +216,40 @@ const styles = StyleSheet.create({
         paddingLeft: 20,
         paddingRight: 20,
         marginBottom: 10,
-        width: '70%',
         height: 50,
+        backgroundColor: 'white',
     },
-      backgroundImageContainer2: {
+    backgroundImageContainer2: {
         position: 'absolute',
         top: 0,
         left: 250,
         zIndex: -1,
-      },
-      backgroundImage2: {
+    },
+    backgroundImage2: {
         flex: 1,
         height: 430,
         width: 430,
         resizeMode: 'cover',
-      },
-      backgroundImageContainer3: {
+    },
+    backgroundImageContainer3: {
         position: 'absolute',
         left: -150,
         top: -150,
         zIndex: -1,
-      },
-      backgroundImage3: {
+    },
+    backgroundImage3: {
         flex: 1,
         height: 480,
         width: 480,
         resizeMode: 'cover',
-      },
-      btnContainer:{
-        borderRadius:3,
-        width:160,
-        alignItems:'center',
-      },
-      btn: {
-        backgroundColor: 'white',
+    },
+    btnContainer: {
+        borderRadius: 3,
+        width: 160,
+        alignItems: 'center',
+    },
+    btn: {
+        backgroundColor: colors.AZUL_OSUCRO,
         borderRadius: 10,
         width: 160,
         //poner sombra al boton
@@ -223,14 +258,13 @@ const styles = StyleSheet.create({
             width: 0,
             height: 12,
         }
-      },
-      contenedor: {
+    },
+    contenedor: {
         width: 130,
         height: 130,
-         marginLeft: 250,
-         //girar la imagen
-            transform: [{ rotate: '150deg' }],
+        marginLeft: 250,
+        //girar la imagen
+        transform: [{ rotate: '150deg' }],
 
-        },
-    });
-    
+    },
+});

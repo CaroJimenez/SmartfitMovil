@@ -7,7 +7,6 @@ export default function AppBarClient() {
     const navigation = useNavigation();
     const handleLogout = () => {
         navigation.navigate('homeClient');
-        console.log("presionaste ir a inicio");
     }
     return (
         <Appbar.Header style={styles.appBarStile}>

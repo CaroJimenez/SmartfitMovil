@@ -1,56 +1,98 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, View, Image } from 'react-native'
 import { TouchableOpacity } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import AppBar from '../../components/common/AppBar';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+import colors from '../../utils/colors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+export default function HomeCScreen({ props }) {
 
-export default function HomeCScreen() {
+    const [emailCompare, setemailCompare] = useState([])
+
+    const [dataAlumno, setdataAlumno] = useState({})
+
+    //listar todos los alumno de la base de datos
+    useEffect(() => {
+        axios.get('http://192.168.0.11:8090/auth/listaAlumnos')
+            .then(response => {
+                console.log(response.data);
+                setemailCompare(response.data);
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    }, [])
+
+    //comparar todos los emails de la base de datos con el email que se envio por parametro
+    useEffect(() => {
+        emailCompare.map((item) => {
+            if (item.email == props.route.params.email) {
+                setdataAlumno(item);
+            }
+        })
+    }, [emailCompare])
+
     const navigation = useNavigation();
 
-    const handleMiInformacionPress = () => {
-        navigation.navigate('infoClientScreen');
-        console.log("presionaste el boton de mi informacion")
+    const handleMiInformacionPress = async () => {
+        const miVariable = await AsyncStorage.getItem('userId');
+        navigation.navigate('infoClientScreen', { miVariable: miVariable });
     };
 
-    const handleRutinaPress = () => {
-        navigation.navigate('rotineScreen');
-        console.log("presionaste el boton de rutina")
+    const handleRutinaPress = async () => {
+        const miVariable = await AsyncStorage.getItem('userId');
+        navigation.navigate('rotineScreen', { miVariable: miVariable });
     };
 
     const handleProgresoPress = () => {
-        // navigation.navigate('ProgresoScreen');
+        navigation.navigate('progresoS');
         console.log("presionaste el boton de progreso")
     };
 
     return (
         <>
-            <SafeAreaProvider>
-                <View>
-                    {/* Asi se implementa el appbar */}
-                    <AppBar/>
-                    <Text>Pantalla Index Cliente</Text>
-                    <TouchableOpacity style={styles.button1} onPress={handleMiInformacionPress}>
-                        <Image source={require('../../../assets/imagenes/informacion.png')} style={styles.image} />
-                        <Text style={{ color: '#fff', fontSize: 35, textShadowColor: '#000', textShadowOffset: { width: 1, height: 1 }, textShadowRadius: 5 }}>
-                            MI INFORMACION
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.button2} onPress={handleRutinaPress}>
-                        <Image source={require('../../../assets/imagenes/rutina.png')} style={styles.image} />
-                        <Text style={{ color: '#fff', fontSize: 35, textShadowColor: '#000', textShadowOffset: { width: 1, height: 1 }, textShadowRadius: 5 }}>
-                            RUTINA
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.button3} onPress={handleProgresoPress}>
-                        <Image source={require('../../../assets/imagenes/progreso.png')} style={styles.image} />
-                        <Text style={{ color: '#fff', fontSize: 35, textShadowColor: '#000', textShadowOffset: { width: 1, height: 1 }, textShadowRadius: 5 }}>
-                            PROGRESO
-                        </Text>
-                    </TouchableOpacity>
+            <AppBar />
+            <SafeAreaProvider style={{ backgroundColor: colors.VERDE_CLARO }}>
+                <View style={styles.container}>
+                <Image
+                style={styles.img}
+                source={require("../../../assets/circulo_verde.png")}
+            />
+
+            <Image
+                style={styles.img2}
+                source={require("../../../assets/franja_azul.png")}
+            />
+                    <View style={styles.touchable}>
+                        <TouchableOpacity style={[styles.button1]} onPress={handleMiInformacionPress}>
+                            <Image source={require('../../../assets/imagenes/informacion.png')} style={styles.image} />
+                            <Text style={{ color: '#fff', fontSize: 35, textShadowColor: '#000', textShadowOffset: { width: 1, height: 1 }, textShadowRadius: 5 }}>
+                                MI INFORMACION
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.touchable}>
+                        <TouchableOpacity style={[styles.button2, { alignItems: 'center' }]} onPress={handleRutinaPress}>
+                            <Image source={require('../../../assets/imagenes/rutina.png')} style={styles.image} />
+                            <Text style={{ color: '#fff', fontSize: 35, textShadowColor: '#000', textShadowOffset: { width: 1, height: 1 }, textShadowRadius: 5 }}>
+                                RUTINA
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                   {/* <View style={styles.touchable}>
+                        <TouchableOpacity style={[styles.button3, { alignItems: 'center' }]} onPress={handleProgresoPress}>
+                            <Image source={require('../../../assets/imagenes/progreso.png')} style={styles.image} />
+                            <Text style={{ color: '#fff', fontSize: 35, textShadowColor: '#000', textShadowOffset: { width: 1, height: 1 }, textShadowRadius: 5 }}>
+                                PROGRESO
+                            </Text>
+                        </TouchableOpacity>
+    </View>*/}
                 </View>
             </SafeAreaProvider>
         </>
+
     )
 }
 
@@ -96,4 +138,35 @@ const styles = StyleSheet.create({
         height: 122.76,
         borderRadius: 16
     },
+    touchable: {
+        position: 'absolute',
+        width: 335,
+        height: 124,
+        left: 35,
+        top: 40,
+        borderRadius: 16,
+    },
+    img:
+    {
+        width: 500,
+        height: 500,
+        marginBottom: 10,
+       //mover hacia la izquierda
+        marginLeft: -350,
+        //mover hacia arriba
+        marginTop: -30,
+        position: 'absolute',
+        zIndex: -1,
+        top: -0,
+    },
+    img2: {
+        width: 500,
+        height: 500,
+        marginBottom: 10,
+        marginTop: 400,
+        position: 'absolute',
+        top: 90,
+        right: -250,
+        zIndex: -1,
+    }
 })

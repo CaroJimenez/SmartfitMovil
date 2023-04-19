@@ -5,6 +5,8 @@ import { View, Text, StatusBar, TouchableOpacity, SafeAreaView, Image } from 're
 import { Input, Icon } from 'react-native-elements';
 import { useFormik } from "formik";
 import colors from "../../utils/colors";
+import AppBar from "../../components/common/AppBar"
+
 const image = { uri: "" };
 export default function ClientsScreen(props) {
     const { navigation } = props;
@@ -41,7 +43,7 @@ export default function ClientsScreen(props) {
     //mandar a traer el servicio de listar clientes con fetch
     const [clients, setClients] = useState([]);
     const getClients = async () => {
-        const response = await fetch('http://192.168.0.7:8090/auth/listaAlumnos');
+        const response = await fetch('http://192.168.0.4:8090/auth/listaAlumnos');
         const data = await response.json();
         setClients(data);
         
@@ -57,9 +59,10 @@ export default function ClientsScreen(props) {
     
 
     return (
+        
         <ScrollView>
         <View style={styles.background}>
-
+        <AppBar/>
             <Image
                 style={styles.img}
                 source={require("../../../assets/circulo_verde.png")}
@@ -160,7 +163,7 @@ const styles = StyleSheet.create({
         width: 500,
         height: 500,
         marginBottom: 10,
-        marginTop: -100,
+        marginTop: -40,
         position: 'absolute',
         top: -10,
         right: 10,
