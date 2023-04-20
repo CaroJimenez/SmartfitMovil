@@ -13,7 +13,7 @@ export default function DeleteRoutines(props) {
 
   const getRutinas = async () => {
     try {
-      const response = await fetch(`http://192.168.0.4:8090/auth/user/${alumnoId}`);
+      const response = await fetch(`http://192.168.0.5:8090/auth/user/${alumnoId}`);
       const data = await response.json();
       setRutinas(data);
     } catch (error) {
@@ -44,7 +44,7 @@ export default function DeleteRoutines(props) {
           {
             text: "Eliminar",
             onPress: async () => {
-              let response = await fetch(`http://192.168.0.4:8090/auth/${alumnoId}/${nameRoutine}`, {
+              let response = await fetch(`http://192.168.0.5:8090/auth/${alumnoId}/${nameRoutine}`, {
                 method: "DELETE",
                 headers: {
                   'Content-Type': 'application/json'
@@ -97,7 +97,7 @@ export default function DeleteRoutines(props) {
         source={require("../../../assets/franja_azul.png")}
       />
 
-      <Text style={styles.title}>Eliminar Rutinas</Text>
+      <Text style={styles.title}>Rutinas</Text>
       <View style={styles.contenido}>
         <View style={styles.cabecera}>
           <Text style={styles.textCabecera}>Nombre</Text>
@@ -108,6 +108,17 @@ export default function DeleteRoutines(props) {
             <View key={name} style={styles.contExercise}>
               <Text style={styles.name}>{name}</Text>
               <View style={styles.iconos}>
+              <Button
+                  icon={
+                    <Icon
+                      type='material-community'
+                      name="pencil"
+                      size={20}
+                      color="white"
+                    />}
+                  onPress={() => verRutina(alumnoId, name)}
+                  buttonStyle={{ backgroundColor: "#E8952B", borderRadius: 30, width: 40, height: 40 }}
+                />
                 <Button
                   icon={
                     <Icon
@@ -118,17 +129,6 @@ export default function DeleteRoutines(props) {
                     />}
                   onPress={() => deleteRoutine(name)}
                   buttonStyle={{ backgroundColor: "#DD4614", borderRadius: 30, width: 40, height: 40 }}
-                />
-                <Button
-                  icon={
-                    <Icon
-                      type='material-community'
-                      name="eye-outline"
-                      size={20}
-                      color="white"
-                    />}
-                  onPress={() => verRutina(alumnoId, name)}
-                  buttonStyle={{ backgroundColor: colors.AZUL_OSUCRO, borderRadius: 30, width: 40, height: 40 }}
                 />
               </View>
             </View>
@@ -195,6 +195,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 0,
     marginRight: 20,
+    //creacr espacio entre iconos
+    justifyContent: 'space-between',
+    width: 100,
 
   },
   tabla: {

@@ -18,7 +18,7 @@ export default function IndexScreen(props) {
     const [password, setPassword] = useState(false);
     const handleLogin = async () => {
         try {
-            const response = await fetch('http://192.168.0.4:8090/auth/login', {
+            const response = await fetch('http://54.227.146.247:8080/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -28,31 +28,46 @@ export default function IndexScreen(props) {
                     password: formik.values.password,
                 })
             });
-
             const data = await response.json();
-            const token = data.token; // token de autenticación
-
+            if (data.mensaje === 'Usuario inactivo') {
+              throw new Error('Usuario inactivo');
+            }
+            
             if (data.authorities[0].authority === "ROLE_INSTRUCTOR") {
                 navigation.navigate('clients'); // redirigir a pantalla de inicio de sesión exitoso
             } else if (data.authorities[0].authority === "ROLE_USER") {
                 /*user = getUserByEmail(formik.values.email);
                 console.log(user.id);*/
+                //guardar el id del usuario en el storage
                 getUserByEmail(data.email);
                 navigation.navigate('homeClient'); // redirigir a pantalla de inicio de sesión exitoso
             }
         } catch (error) {
-            Toast.show({
-                type: 'error',
-                text1: 'Error',
-                text2: 'Usuario o contraseña incorrectos',
-            });
+           console.log(error.message);
+           if (error.message === 'Usuario inactivo'){
+                Toast.show({
+                    type: 'error',
+                    position: 'top',
+                    text1: 'Usuario inactivo',
+                    text2: 'Contacte al administrador',
+                    visibilityTime: 4000,
+                });
+           }else{
+                Toast.show({
+                    type: 'error',
+                    position: 'top',
+                    text1: 'Error',
+                    text2: 'Usuario o contraseña incorrectos',
+                    visibilityTime: 4000,
+                });
+           }
         }
     };
 
 
     const [clients, setClients] = useState([]);
     const getClients = async () => {
-        const response = await fetch('http://192.168.0.4:8090/auth/listaAlumnos');
+        const response = await fetch('http://54.227.146.247:8080/auth/listaAlumnos');
         const data = await response.json();
         setClients(data);
 
@@ -62,7 +77,6 @@ export default function IndexScreen(props) {
     }, []);
 
     const getUserByEmail = async (email) => {
-        console.log(email);
         //buscar el usuario por email mediante el api
         clients.map((item) => {
             if (item.email == email) {

@@ -6,6 +6,7 @@ import 'react-native-gesture-handler'
 import colors from '../../utils/colors';
 import { Button, Icon } from 'react-native-elements';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function ClientDataScreen(props) {
@@ -14,7 +15,7 @@ export default function ClientDataScreen(props) {
     //mandar a traer el servicio de listar alumno mediante el id con fetch
     const [alumnos, setAlumnos] = useState([]);
     const getAlumnos = async () => {
-        const response = await fetch(`http://192.168.0.4:8090/auth/alumno/${id_alumno}`)
+        const response = await fetch(`http://192.168.0.5:8090/auth/alumno/${id_alumno}`)
         const data = await response.json();
         setAlumnos(data);
 
@@ -37,6 +38,9 @@ export default function ClientDataScreen(props) {
 
     const deleteRoutines = (alumnoId) => {
         navigation.navigate('deleteRoutines', { alumnoId });
+    };
+    const editRoutines = (alumnoId) => {
+        navigation.navigate('editRoutines', { alumnoId });
     };
 
     return (
@@ -94,26 +98,15 @@ listar view de alumnos
                     buttonStyle={{ backgroundColor: colors.AZUL_OSUCRO, borderRadius: 30, width: 100, height: 40, marginTop: 20 }}
                 />
                 <Button
-                    icon={
-                        <Icon
-                            type='material-community'
-                            name="pencil"
-                            size={25}
-                            color="white"
-                        />}
-                    onPress={() => navigation.navigate('editRoutines', { id_alumno })}
-                    buttonStyle={{ backgroundColor: "#FFAF00", borderRadius: 30, width: 100, height: 40, marginTop: 20 }}
-                />
-                <Button
                     onPress={() => deleteRoutines(alumnos.id)}
                     icon={
                         <Icon
                             type='material-community'
-                            name="trash-can-outline"
+                            name="eye-outline"
                             size={25}
                             color="white"
                         />}
-                    buttonStyle={{ backgroundColor: "#DD4614", borderRadius: 30, width: 100, height: 40, marginTop: 20 }}
+                    buttonStyle={{ backgroundColor: colors.VERDE_OSCURO, borderRadius: 30, width: 100, height: 40, marginTop: 20 }}
                 />
 
             </View>

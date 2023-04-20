@@ -30,7 +30,7 @@ export default function RoutinesScreen(props) {
 
     //funcion para crear una rutina
     function enviarDatos(datos) {
-        fetch('http://192.168.0.4:8090/auth/addRoutine', {
+        fetch('http://192.168.0.5:8090/auth/addRoutine', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -49,7 +49,7 @@ export default function RoutinesScreen(props) {
 
     //acceder al servicio de ejercicios con fetch
     const getEjercicios = async () => {
-        const response = await fetch('http://192.168.0.4:8090/auth/listExercise');
+        const response = await fetch('http://192.168.0.5:8090/auth/listExercise');
         const data = await response.json();
         setEjercicios(data);
     }
@@ -68,6 +68,7 @@ export default function RoutinesScreen(props) {
         }),
         validateOnChange: false,
         onSubmit: async (formValue, { setSubmitting }) => {
+            
             for (let i = 0; i < selectedExercises.length; i++) {
                 const datos = {
                     name: formValue.nameRoutine,
@@ -97,7 +98,7 @@ export default function RoutinesScreen(props) {
 
 
     return (
-        
+        <ScrollView>
         <View style={styles.container}>
             <View style={styles.appBar}>
                 <AppBarCoach />
@@ -179,7 +180,7 @@ export default function RoutinesScreen(props) {
             </View>
 
         </View>
-
+        </ScrollView>
     );
 }
 
@@ -201,7 +202,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: colors.VERDE_CLARO,
-        height: '100%',
+        height: 900,
 
     },
     contExercise: {

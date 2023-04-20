@@ -27,7 +27,7 @@ export default function EditRoutines(props) {
         setSelectedExercises([...selectedExercises, '']);
     }
     function enviarDatos(datos) {
-        fetch('http://192.168.0.4:8090/auth/addRoutine', {
+        fetch('http://192.168.0.5:8090/auth/addRoutine', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -80,7 +80,7 @@ export default function EditRoutines(props) {
 
     const getRutinas = async () => {
         try {
-            const response = await fetch(`http://192.168.0.4:8090/auth/user/${id_alumno}`);
+            const response = await fetch(`http://192.168.0.5:8090/auth/user/${id_alumno}`);
             const data = await response.json();
             const uniqueRutinas = data
   .filter((rutina, index, self) => index === self.findIndex((r) => r.name === rutina.name))
@@ -93,7 +93,7 @@ export default function EditRoutines(props) {
 
     const obtenerEjercicios = async (name) => {
         try {
-            const response = await fetch(`http://192.168.0.4:8090/auth/${name}/user/${id_alumno}`);
+            const response = await fetch(`http://192.168.0.5:8090/auth/${name}/user/${id_alumno}`);
             const data = await response.json();
             setEjercicios(data);
         } catch (error) {
@@ -108,7 +108,7 @@ export default function EditRoutines(props) {
    
 
     const getEjercicios = async () => {
-        const response = await fetch('http://192.168.0.4:8090/auth/listExercise');
+        const response = await fetch('http://192.168.0.5:8090/auth/listExercise');
         const data = await response.json();
         setEjerciciosGenerales(data);
 
@@ -129,7 +129,7 @@ export default function EditRoutines(props) {
                 {
                     text: "Eliminar",
                     onPress: async () => {
-                        let response = await fetch(`http://192.168.0.4:8080/auth/${id_alumno}/${idEjercicio}/${nameRoutine}`, {
+                        let response = await fetch(`http://3.84.211.71:8080/auth/${id_alumno}/${idEjercicio}/${nameRoutine}`, {
                             method: "DELETE",
                             headers: {
                                 'Content-Type': 'application/json'

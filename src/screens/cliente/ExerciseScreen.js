@@ -15,7 +15,7 @@ export default function ExerciseScreen({ route }) {
     const [ejercicios, setEjercicios] = useState([]);
 
     const guardarListaEjercicios = () => {
-      const url = `http://192.168.0.4:8090/auth/${namerutina}/user/${id}`;
+      const url = `http://54.227.146.247:8080/auth/${namerutina}/user/${id}`;
       fetch(url)
         .then(response => response.json())
         .then(data => {

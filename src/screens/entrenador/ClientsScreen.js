@@ -43,7 +43,7 @@ export default function ClientsScreen(props) {
     //mandar a traer el servicio de listar clientes con fetch
     const [clients, setClients] = useState([]);
     const getClients = async () => {
-        const response = await fetch('http://192.168.0.4:8090/auth/listaAlumnos');
+        const response = await fetch('http://192.168.0.5:8090/auth/listaAlumnos');
         const data = await response.json();
         setClients(data);
         

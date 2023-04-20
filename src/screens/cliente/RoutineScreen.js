@@ -12,7 +12,7 @@ export default function RoutineScreen(props) {
 
     //Obtiene las rutinas del alumno
     useEffect(() => {
-        fetch(`http://192.168.0.4:8090/auth/user/${miVariable}`)
+        fetch(`http://54.227.146.247:8080/auth/user/${miVariable}`)
             .then(response => response.json())
             .then(data => setRutinas(data))
             .catch(error => console.log(error));

@@ -6,7 +6,6 @@ import { Input, Button, Icon } from "react-native-elements";
 import * as yup from 'yup';
 import { useFormik } from "formik";
 import { useNavigation } from "@react-navigation/native";
-
 import Toast from "react-native-toast-message";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -79,7 +78,7 @@ export default function RegistrationForm() {
             //convertir a JSON
             const jsonData = JSON.stringify(formData);
             //enviar datos al servidor
-            fetch('http://35.174.172.150:8080/auth/nuevoUsuario', {
+            fetch('http://54.227.146.247:8080/auth/nuevoUsuario', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -94,7 +93,7 @@ export default function RegistrationForm() {
                 type: "success",
                 position: "top",
                 text1: "Registro exitoso",
-                text2: "Ahora puedes iniciar sesión",
+                text2: "Espera a que el administrador active tu cuenta",
                 visibilityTime: 3000,
                 autoHide: true,
                 topOffset: 30,

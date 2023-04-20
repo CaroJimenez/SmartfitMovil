@@ -7,32 +7,11 @@ import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import colors from '../../utils/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-export default function HomeCScreen({ props }) {
-
+export default function HomeCScreen({props}) {
     const [emailCompare, setemailCompare] = useState([])
 
     const [dataAlumno, setdataAlumno] = useState({})
-
-    //listar todos los alumno de la base de datos
-    useEffect(() => {
-        axios.get('http://192.168.0.11:8090/auth/listaAlumnos')
-            .then(response => {
-                console.log(response.data);
-                setemailCompare(response.data);
-            })
-            .catch(error => {
-                console.log(error);
-            })
-    }, [])
-
-    //comparar todos los emails de la base de datos con el email que se envio por parametro
-    useEffect(() => {
-        emailCompare.map((item) => {
-            if (item.email == props.route.params.email) {
-                setdataAlumno(item);
-            }
-        })
-    }, [emailCompare])
+  
 
     const navigation = useNavigation();
 
@@ -46,9 +25,9 @@ export default function HomeCScreen({ props }) {
         navigation.navigate('rotineScreen', { miVariable: miVariable });
     };
 
-    const handleProgresoPress = () => {
-        navigation.navigate('progresoS');
-        console.log("presionaste el boton de progreso")
+    const handleProgresoPress = async () => {
+        const miVariable = await AsyncStorage.getItem('userId');
+        navigation.navigate('progresoS', { miVariable: miVariable });
     };
 
     return (
@@ -81,14 +60,14 @@ export default function HomeCScreen({ props }) {
                             </Text>
                         </TouchableOpacity>
                     </View>
-                   {/* <View style={styles.touchable}>
+                    <View style={styles.touchable}>
                         <TouchableOpacity style={[styles.button3, { alignItems: 'center' }]} onPress={handleProgresoPress}>
                             <Image source={require('../../../assets/imagenes/progreso.png')} style={styles.image} />
                             <Text style={{ color: '#fff', fontSize: 35, textShadowColor: '#000', textShadowOffset: { width: 1, height: 1 }, textShadowRadius: 5 }}>
                                 PROGRESO
                             </Text>
                         </TouchableOpacity>
-    </View>*/}
+    </View>
                 </View>
             </SafeAreaProvider>
         </>
