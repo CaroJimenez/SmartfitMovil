@@ -15,7 +15,7 @@ export default function ClientDataScreen(props) {
     //mandar a traer el servicio de listar alumno mediante el id con fetch
     const [alumnos, setAlumnos] = useState([]);
     const getAlumnos = async () => {
-        const response = await fetch(`http://192.168.0.5:8090/auth/alumno/${id_alumno}`)
+        const response = await fetch(`http://18.233.152.72:8080/auth/alumno/${id_alumno}`)
         const data = await response.json();
         setAlumnos(data);
 

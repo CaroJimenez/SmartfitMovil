@@ -18,7 +18,7 @@ export default function IndexScreen(props) {
     const [password, setPassword] = useState(false);
     const handleLogin = async () => {
         try {
-            const response = await fetch('http://54.227.146.247:8080/auth/login', {
+            const response = await fetch('http://18.233.152.72:8080/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -67,7 +67,7 @@ export default function IndexScreen(props) {
 
     const [clients, setClients] = useState([]);
     const getClients = async () => {
-        const response = await fetch('http://54.227.146.247:8080/auth/listaAlumnos');
+        const response = await fetch('http://18.233.152.72:8080/auth/listaAlumnos');
         const data = await response.json();
         setClients(data);
 

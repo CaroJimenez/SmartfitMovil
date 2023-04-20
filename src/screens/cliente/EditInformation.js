@@ -54,7 +54,7 @@ export default function EditInformation() {
     const actualizar = async (values) => {
         try {
             //Se supone que masomens asi se consume en servicio
-            const response = await fetch(`http://3.84.211.71:8080/auth/updateAlumno/${data.id}`, {
+            const response = await fetch(`http://18.233.152.72:8080/auth/updateAlumno/${data.id}`, {
                 method: 'PUT',
                 headers: {
                     Accept: 'application/json',

@@ -30,7 +30,7 @@ export default function RoutinesScreen(props) {
 
     //funcion para crear una rutina
     function enviarDatos(datos) {
-        fetch('http://192.168.0.5:8090/auth/addRoutine', {
+        fetch('http://18.233.152.72:8080/auth/addRoutine', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -49,7 +49,7 @@ export default function RoutinesScreen(props) {
 
     //acceder al servicio de ejercicios con fetch
     const getEjercicios = async () => {
-        const response = await fetch('http://192.168.0.5:8090/auth/listExercise');
+        const response = await fetch('http://18.233.152.72:8080/auth/listExercise');
         const data = await response.json();
         setEjercicios(data);
     }

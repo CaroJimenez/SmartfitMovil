@@ -13,7 +13,7 @@ export default function InformationScreen(props) {
 
     const [alumnos, setAlumnos] = useState([]);
     const getAlumnos = async () => {
-        const response = await fetch(`http://54.227.146.247:8080/auth/alumno/${miVariable}`)
+        const response = await fetch(`http://18.233.152.72:8080/auth/alumno/${miVariable}`)
         const data = await response.json();
         setAlumnos(data);
 

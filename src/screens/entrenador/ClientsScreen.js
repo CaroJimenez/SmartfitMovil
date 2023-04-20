@@ -43,7 +43,7 @@ export default function ClientsScreen(props) {
     //mandar a traer el servicio de listar clientes con fetch
     const [clients, setClients] = useState([]);
     const getClients = async () => {
-        const response = await fetch('http://192.168.0.5:8090/auth/listaAlumnos');
+        const response = await fetch('http://18.233.152.72:8080/auth/listaAlumnosActivos');
         const data = await response.json();
         setClients(data);
         
@@ -93,7 +93,6 @@ export default function ClientsScreen(props) {
     <View style={styles.datos}>
       <Text style={[styles.text, {fontWeight:'bold'}]}>{client.name} {client.last_name}</Text>
       <Text style={[styles.text]}>{client.email} </Text>
-
       <View style={{ position: 'absolute', right: 0, marginRight: 15, marginTop: 15 }}>
         <Icon
           onPress={() => selectClient(client.id)}

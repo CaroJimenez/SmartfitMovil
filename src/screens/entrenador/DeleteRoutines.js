@@ -13,7 +13,7 @@ export default function DeleteRoutines(props) {
 
   const getRutinas = async () => {
     try {
-      const response = await fetch(`http://192.168.0.5:8090/auth/user/${alumnoId}`);
+      const response = await fetch(`http://18.233.152.72:8080/auth/user/${alumnoId}`);
       const data = await response.json();
       setRutinas(data);
     } catch (error) {
@@ -44,7 +44,7 @@ export default function DeleteRoutines(props) {
           {
             text: "Eliminar",
             onPress: async () => {
-              let response = await fetch(`http://192.168.0.5:8090/auth/${alumnoId}/${nameRoutine}`, {
+              let response = await fetch(`http://18.233.152.72:8080/auth/${alumnoId}/${nameRoutine}`, {
                 method: "DELETE",
                 headers: {
                   'Content-Type': 'application/json'

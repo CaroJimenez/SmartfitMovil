@@ -1,21 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TextInput, Dimensions, StyleSheet, ScrollView } from 'react-native';
 import AppBarClient from '../../components/common/AppBarClient';
 import { Icon, Input, Button } from 'react-native-elements';
 import colors from '../../utils/colors';
 import * as yup from 'yup';
 import { useFormik } from "formik";
 import Toast from "react-native-toast-message";
-/*
-import Modal from '../../components/common/Modal'
-import ChangePeso from '../../components/count/ChangePeso'
-import GraficProgress from '../../components/count/GraficProgress'
-*/
-
+import { LineChart } from 'react-native-chart-kit';
 
 export default function ProgresoScreen(props) {
+    const screenWidth = Dimensions.get('window').width;
+    const chartWidth = screenWidth * 0.9;
+    const chartHeight = 220;
+
     const { navigation, route } = props;
     const { miVariable } = route.params;
+
+    const [alumnos, setAlumnos] = useState([]);
+    const getAlumnos = async () => {
+        const response = await fetch(`http://18.233.152.72:8080/auth/alumno/${miVariable}`)
+        const data = await response.json();
+        setAlumnos(data);
+
+    }
+    useEffect(() => {
+        getAlumnos();
+    }, []);
+
+    const imc = alumnos.current_weight / (alumnos.height * alumnos.height);
+    //quitar decimales
+    const imc2 = imc.toFixed(2);
 
     //formik con la validacion del campo peso
     const formik = useFormik({
@@ -47,7 +61,7 @@ export default function ProgresoScreen(props) {
         //crear una fecha de hoy
         const date = new Date().toISOString().slice(0, 10);
         //INSERTAR NUEVO PESO
-        const response = await fetch(`http://54.227.146.247:8080/auth/record/insertRecord?weight=${peso}&date=${date}&userId=${miVariable}`, {
+        const response = await fetch(`http://18.233.152.72:8080/auth/record/insertRecord?weight=${peso}&date=${date}&userId=${miVariable}`, {
             method: 'POST',
         });
         const data = await response.json();
@@ -56,7 +70,7 @@ export default function ProgresoScreen(props) {
 
     const actualizarPeso = async (peso) => {
         try {
-            const response = await fetch(`http://54.227.146.247:8080/auth/updateWeight/${miVariable}`, {
+            const response = await fetch(`http://18.233.152.72:8080/auth/updateWeight/${miVariable}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -89,7 +103,7 @@ export default function ProgresoScreen(props) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`http://54.227.146.247:8080/auth/record/record/${miVariable}`);
+                const response = await fetch(`http://18.233.152.72:8080/auth/record/record/${miVariable}`);
                 const data = await response.json();
                 setRecord(data);
             } catch (error) {
@@ -100,69 +114,36 @@ export default function ProgresoScreen(props) {
         fetchData();
     }, []);
 
+    if (!record) {
+        return null; // o un componente de carga mientras se carga el registro
+    }
 
 
+    const chartConfig = {
+        backgroundColor: '#ffffff',
+        backgroundGradientFrom: '#ffffff',
+        backgroundGradientTo: '#ffffff',
+        decimalPlaces: 0,
+        color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+        labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+        
+    };
 
-    /*  const [showModal, setshowModal] = useState(false);
-      const [conteined, setConteined] = useState(null);
-      const onClose = () => setshowModal(false);
-      const [pesoChangePeso, setPesoChangePeso] = useState(null); // Nuevo estado para almacenar el peso de ChangePeso
-  
-      //Variables estaticas
-      const [weight, setWeight] = useState(70); // Peso predefinido
-      const [height, setHeight] = useState(1.75); // Altura predefinida
-      const [goal, setGoal] = useState('Bajar de Peso'); // Objetivo predefinido
-      const [imc, setImc] = useState(0);
-  
-      useEffect(() => {
-          const imc = weight / (height * height);
-          setImc(imc.toFixed(2));
-      }, []);
-  
-      // Llamada al posible servicio de Spring
-      // const fetchData = async () => {
-      //     try {
-      //         const response = await axios.get('http://your-api-endpoint');
-      //         const { weight, height, goal } = response.data;
-      //         setWeight(weight);
-      //         setHeight(height);
-      //         setGoal(goal);
-      //     } catch (error) {
-      //         console.error(error);
-      //     }
-      // };
-  
-      // useEffect(() => {
-      //     fetchData();
-      // }, []);
-  
-      // Cálculo del IMC
-      //Aqui masomenos verifique de que si el peso de ChangePeso es diferente al peso del servicio volviera a calcular el imc
-      useEffect(() => {
-          let newImc;
-          if (pesoChangePeso !== null && pesoChangePeso !== weight) { // Verifica si el peso de ChangePeso es diferente al peso del servicio
-              newImc = pesoChangePeso / (height * height);
-              setWeight(pesoChangePeso);
-          } else {
-              newImc = weight / (height * height);
-          }
-          setImc(newImc.toFixed(2));
-      }, [weight, height, pesoChangePeso]);
-  
-      // Función para actualizar el peso desde ChangePeso
-      const handleUpdateWeight = (newWeight) => {
-          setPesoChangePeso(newWeight);
-      }
-  
-      const handleChangePress = () => {
-          setConteined(<ChangePeso close={onClose} onUpdateWeight={handleUpdateWeight} peso={weight} />);
-          setshowModal(true);
-      }*/
+    const data = {
+        labels: record.map((r) => r.date),
+        datasets: [
+            {
+                data: record.map((r) => r.weight),
+                color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+            },
+        ],
+    };
+
 
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView style={{backgroundColor: colors.VERDE_CLARO}}>
 
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <View style={styles.contenedor}>
                 <View style={styles.appBar}>
                     <AppBarClient />
                 </View>
@@ -186,30 +167,22 @@ export default function ProgresoScreen(props) {
 
                             loading={formik.isSubmitting}
                         />
+                        <Text style={styles.imc}>Tu IMC actual es: {imc2}</Text>
                     </View>
 
 
                 </View>
-
-                {/* 
-                <Text style={styles.input}>IMC: {imc}</Text>
-                <Text style={styles.input}>Objetivo : {goal}</Text>
-                
-                <Text style={styles.texto}>Para registrar tu peso, presiona el botón de editar</Text>
-                {/* <Text style={styles.input}>{pesoChangePeso !== null ? pesoChangePeso : weight}</Text> // Muestra el peso de ChangePeso si existe */}
-                {/*}<View style={styles.rowContainer}>
-                    <TouchableOpacity onPress={handleChangePress}>
-                        <Icon
-                            name="edit"
-                            type="material"
-                            color="black"
-                        />
-                    </TouchableOpacity>
+                <View style={styles.grafica}>
+                    <LineChart
+                        data={data}
+                        width={screenWidth}
+                        height={chartHeight}
+                        chartConfig={chartConfig}
+                        bezier
+                    />
                 </View>
-                <Modal visible={showModal} close={onClose}>
-                    {conteined}
-    </Modal>*/}
-                {/* <GraficProgress />*/}
+
+
             </View>
         </ScrollView>
     );
@@ -268,5 +241,19 @@ const styles = StyleSheet.create({
 
     }, weightForm: {
         marginTop: 20,
+    },
+    grafica: {
+        marginTop: 20,
+    },
+    contenedor: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },imc:{
+        marginTop: 15,
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 8,
+
     }
 });

@@ -44,17 +44,24 @@ export default function RegistrationForm() {
         },
         //validaciones del formulario
         validationSchema: yup.object({
-            email: yup.string()
-                .email("Formato de correo no válido").
-                matches(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/, "Formato de correo no válido")
-                .required("Email obligatorio"),
-            password: yup.string().required("Contraseña obligatoria"),
+            email: yup.string().email("Email invalido").matches(/utez\.edu\.mx$/, "El correo debe tener terminación utez.edu.mx").required("Requerido"),
+            password: yup.string().min(7, "Muy corto!").required("Requerido"),
             repeatPassword: yup.string()
                 .required("Contraseña obligatoria")
                 .oneOf([yup.ref("password")], "Las contraseñas no coinciden"),
-            name: yup.string().required("Nombre obligatorio"),
-            lastName: yup.string().required("Apellido obligatorio"),
-            birthDate: yup.string().required("Fecha de nacimiento obligatoria"),
+            name: yup.string().matches(/^[a-zA-Z\sáéíóúÁÉÍÓÚñÑüÜ]+$/,"Solo se permiten letras")
+            .min(3, "Muy corto!")
+            .max(18, "Demasido largo!")
+            .required("Requerido"),
+            lastName: yup.string().matches(/^[a-zA-Z\sáéíóúÁÉÍÓÚñÑüÜ]+$/, "Solo se admiten letras")
+            .min(2, "Muy corto!")
+            .max(10, "Demasido largo!")
+            .required("Requerido"),
+            birthDate: yup.string().required("La fecha de nacimiento es requerida")
+            .max(
+              new Date(Date.now() - 18 * 31556952000), // Calcula la fecha actual menos 18 años en milisegundos
+              "Debes ser mayor de edad"
+            ),
             gender: yup.string().required("Por favor selecciona un género"),
             weight: yup.string().required("Ingresa tu peso, si no lo sabes puedes poner uno aproximado"),
             height: yup.string().required("Ingresa tu altura, si no la conoces puedes poner una aproximada"),
@@ -78,7 +85,7 @@ export default function RegistrationForm() {
             //convertir a JSON
             const jsonData = JSON.stringify(formData);
             //enviar datos al servidor
-            fetch('http://54.227.146.247:8080/auth/nuevoUsuario', {
+            fetch('http://18.233.152.72:8080/auth/nuevoUsuario', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

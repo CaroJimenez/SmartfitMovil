@@ -10,7 +10,7 @@ import AppBarCoach from "../../components/common/AppBarCoach";
 export default function ClientRoutines(props) {
     const { navigation, route } = props;
     const { alumnoId, name } = route.params;
-    const url = `http://192.168.0.5:8090/auth/${name}/user/${alumnoId}`;
+    const url = `http://18.233.152.72:8080/auth/${name}/user/${alumnoId}`;
     const [exercises, setExercises] = useState([]);
     const [ejercicios, setEjercicios] = useState([]);
     const [selectedExercises, setSelectedExercises] = useState([]);
@@ -28,7 +28,7 @@ export default function ClientRoutines(props) {
 
     //funcion para crear una rutina
     function enviarDatos(nombre, descripcion, idAlumno, idEjercicio) {
-        fetch('http://192.168.0.5:8090/auth/addRoutine', {
+        fetch('http://18.233.152.72:8080/auth/addRoutine', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -73,7 +73,7 @@ export default function ClientRoutines(props) {
     }, []);
 
     const getEjercicios = async () => {
-        const response = await fetch('http://192.168.0.5:8090/auth/listExercise');
+        const response = await fetch('http://18.233.152.72:8080/auth/listExercise');
         const data = await response.json();
         setEjercicios(data);
     }
@@ -93,7 +93,7 @@ export default function ClientRoutines(props) {
                 {
                     text: "Eliminar",
                     onPress: async () => {
-                        let response = await fetch(`http://192.168.0.5:8090/auth/${alumnoId}/${idEjercicio}/${name}`, {
+                        let response = await fetch(`http://18.233.152.72:8080/auth/${alumnoId}/${idEjercicio}/${name}`, {
                             method: "DELETE",
                             headers: {
                                 'Content-Type': 'application/json'
