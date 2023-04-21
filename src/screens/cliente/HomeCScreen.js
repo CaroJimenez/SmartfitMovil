@@ -7,11 +7,11 @@ import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import colors from '../../utils/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-export default function HomeCScreen({props}) {
+export default function HomeCScreen({ props }) {
     const [emailCompare, setemailCompare] = useState([])
 
     const [dataAlumno, setdataAlumno] = useState({})
-  
+
 
     const navigation = useNavigation();
 
@@ -35,15 +35,15 @@ export default function HomeCScreen({props}) {
             <AppBar />
             <SafeAreaProvider style={{ backgroundColor: colors.VERDE_CLARO }}>
                 <View style={styles.container}>
-                <Image
-                style={styles.img}
-                source={require("../../../assets/circulo_verde.png")}
-            />
+                    <Image
+                        style={styles.img}
+                        source={require("../../../assets/circulo_verde.png")}
+                    />
 
-            <Image
-                style={styles.img2}
-                source={require("../../../assets/franja_azul.png")}
-            />
+                    <Image
+                        style={styles.img2}
+                        source={require("../../../assets/franja_azul.png")}
+                    />
                     <View style={styles.touchable}>
                         <TouchableOpacity style={[styles.button1]} onPress={handleMiInformacionPress}>
                             <Image source={require('../../../assets/imagenes/informacion.png')} style={styles.image} />
@@ -67,7 +67,7 @@ export default function HomeCScreen({props}) {
                                 PROGRESO
                             </Text>
                         </TouchableOpacity>
-    </View>
+                    </View>
                 </View>
             </SafeAreaProvider>
         </>
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
         width: 500,
         height: 500,
         marginBottom: 10,
-       //mover hacia la izquierda
+        //mover hacia la izquierda
         marginLeft: -350,
         //mover hacia arriba
         marginTop: -30,

@@ -106,11 +106,11 @@ export default function ProgresoScreen(props) {
                 const response = await fetch(`http://18.233.152.72:8080/auth/record/record/${miVariable}`);
                 const data = await response.json();
                 setRecord(data);
+
             } catch (error) {
                 console.error(error);
             }
         };
-
         fetchData();
     }, []);
 
@@ -130,15 +130,15 @@ export default function ProgresoScreen(props) {
     };
 
     const data = {
-        labels: record.map((r) => r.date),
+        labels: record.map((r) => r.date.split("T")[0]),
         datasets: [
-            {
-                data: record.map((r) => r.weight),
-                color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-            },
+          {
+            data: record.map((r) => r.weight),
+            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+          },
         ],
-    };
-
+      };
+      
 
     return (
         <ScrollView style={{backgroundColor: colors.VERDE_CLARO}}>
@@ -179,7 +179,7 @@ export default function ProgresoScreen(props) {
                         height={chartHeight}
                         chartConfig={chartConfig}
                         bezier
-                    />
+                        />
                 </View>
 
 

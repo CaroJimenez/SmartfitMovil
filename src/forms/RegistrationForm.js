@@ -8,6 +8,7 @@ import { useFormik } from "formik";
 import { useNavigation } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 export default function RegistrationForm() {
     const navigation = useNavigation()
@@ -51,11 +52,11 @@ export default function RegistrationForm() {
                 .oneOf([yup.ref("password")], "Las contraseñas no coinciden"),
             name: yup.string().matches(/^[a-zA-Z\sáéíóúÁÉÍÓÚñÑüÜ]+$/,"Solo se permiten letras")
             .min(3, "Muy corto!")
-            .max(18, "Demasido largo!")
+            .max(50, "Demasido largo!")
             .required("Requerido"),
             lastName: yup.string().matches(/^[a-zA-Z\sáéíóúÁÉÍÓÚñÑüÜ]+$/, "Solo se admiten letras")
             .min(2, "Muy corto!")
-            .max(10, "Demasido largo!")
+            .max(40, "Demasido largo!")
             .required("Requerido"),
             birthDate: yup.string().required("La fecha de nacimiento es requerida")
             .max(
@@ -106,12 +107,41 @@ export default function RegistrationForm() {
                 topOffset: 30,
                 bottomOffset: 40,
             });
+            //obtener el id del usuario
+            //getListaAlumnos()
+/*
+            //INGRESARLE UN HISTORIAL AL USUARIO
+            const date = new Date().toISOString().slice(0, 10);
+            const peso = formValue['weight'];
+        //INSERTAR NUEVO PESO
+        const response = await fetch(`http://18.233.152.72:8080/auth/record/insertRecord?weight=${peso}&date=${date}&userId=${miVariable}`, {
+            method: 'POST',
+        });
+        const data = await response.json();
+        console.log(data);*/
 
             setSubmitting(false);
         }
 
-
     });
+
+    async function getListaAlumnos() {
+        try {
+          const response = await fetch('http://18.233.152.72:8080/auth/listaAlumnos');
+          const data = await response.json();
+          console.log(data);
+          //BUSCAR COINCIDENCIAS ENTRE EL CORREO DEL FORMULARIO Y EL CORREO DE LA LISTA DE ALUMNOS
+            const result = data.find(({ email }) => email === formik.values.email);
+            console.log(result.id);
+            //GUARDAR EL ID DEL USUARIO EN UNA VARIABLE
+            const miVariable = result.id;
+            console.log("BIEN..."+miVariable);
+          return data;
+        } catch (error) {
+          console.error(error);
+        }
+      }
+      
     //ocultar y mostrar contraseña
     const showPass = () => {
         setPassword(!password);
